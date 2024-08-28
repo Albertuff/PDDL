@@ -1,29 +1,40 @@
 (define (domain rover-domain)
-  (:requirements :strips :typing)
-  (:types location rover rock lab)
+  (:requirements :typing)
   
+  (:types 
+    rock rover location lab
+  )
+
   (:predicates
-    (at ?r - rover ?l - location)
-    (at ?r - rock ?l - location)
-    (connected ?l1 - location ?l2 - location)
-    (in ?r - rock ?lab - lab)
+    (roca-en-l ?l - location ?r - rock)         ; La roca ?r está en la localidad ?l
+    (rover-en-l ?l - location ?rover - rover)   ; El rover está en la localidad ?l
+    (lab-en ?l - location)                      ; El laboratorio está en la localidad ?l
+    (rover-vacio ?rover - rover)                ; El rover está vacío
+    (rover-lleno ?rover - rover ?r - rock)      ; El rover está transportando la roca ?r
+    (ir ?l1 - location ?l2 - location)          ; Hay un camino de ?l1 a ?l2
   )
   
-  (:action move
-    :parameters (?rover - rover ?from - location ?to - location)
-    :precondition (and (at ?rover ?from) (connected ?from ?to))
-    :effect (and (not (at ?rover ?from)) (at ?rover ?to))
+  (:action mover
+    :parameters (?rover - rover ?l1 - location ?l2 - location)
+    :precondition 
+      (and (rover-en-l ?l1 ?rover) (ir ?l1 ?l2))
+    :effect 
+      (and (not (rover-en-l ?l1 ?rover)) (rover-en-l ?l2 ?rover) (ir ?l2 ?l1))
   )
-  
-  (:action load
-    :parameters (?rover - rover ?rock - rock ?loc - location)
-    :precondition (and (at ?rover ?loc) (at ?rock ?loc))
-    :effect (and (not (at ?rock ?loc)) (in ?rock ?rover))
+
+  (:action cargar
+    :parameters (?r - rock ?l - location ?rover - rover)
+    :precondition 
+      (and (rover-en-l ?l ?rover) (roca-en-l ?l ?r) (rover-vacio ?rover))
+    :effect 
+      (and (not (rover-vacio ?rover)) (rover-lleno ?rover ?r) (not (roca-en-l ?l ?r)))
   )
-  
-  (:action unload
-    :parameters (?rover - rover ?rock - rock ?lab - lab)
-    :precondition (and (at ?rover ?lab) (in ?rock ?rover))
-    :effect (and (not (in ?rock ?rover)) (in ?rock ?lab))
+
+  (:action descargar
+    :parameters (?r - rock ?l - location ?rover - rover)
+    :precondition 
+      (and (rover-en-l ?l ?rover) (rover-lleno ?rover ?r))
+    :effect 
+      (and (not (rover-lleno ?rover ?r)) (rover-vacio ?rover) (roca-en-l ?l ?r))
   )
 )

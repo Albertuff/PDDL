@@ -1,36 +1,35 @@
-(define (problem rover-problem)
+(define (problem transporte-rocas)
   (:domain rover-domain)
   
-  (:objects
-    rover1 - rover
-    rock1 - rock
-    rock2 - rock
-    loc1 loc2 loc3 loc4 loc5 - location
-    lab1 - lab
+  (:objects 
+    r1 r2 - rock               ; Las rocas
+    l1 l2 l3 l4 l5 - location  ; Las localidades y el laboratorio
+    rover - rover              ; El rover
+    lab - lab                  ; El laboratorio
   )
   
-  (:init
-    (at rover1 loc4)
-    (at rock1 loc1)
-    (at rock2 loc2)
-    
-    (connected loc3 loc1)  ; El camino entre loc3 y loc1 es bidireccional
-    (connected loc1 loc3)
-    
-    (connected loc3 loc2)  ; El camino entre loc3 y loc2 es unidireccional
-    (connected loc2 loc4)  ; El camino entre loc2 y loc4 es unidireccional
-    
-    (connected loc3 loc4)  ; El camino entre loc3 y loc4 es bidireccional
-    (connected loc4 loc3)
-    
-    (connected loc4 loc5)  ; El camino entre loc4 y loc5 es bidireccional
-    (connected loc5 loc4)
+  (:init 
+    (roca-en-l l1 r1)          ; Roca 1 está en la localidad 1
+    (roca-en-l l2 r2)          ; Roca 2 está en la localidad 2
+    (rover-en-l l4 rover)      ; El rover está en la localidad 4
+    (lab-en l5)                ; El laboratorio está en la localidad 5
+    (rover-vacio rover)        ; El rover está vacío
+
+    ; Rutas permitidas
+    (ir l1 l3)                 ; Camino de L1 a L3 (bidireccional)
+    (ir l3 l1)                 ; Camino de L3 a L1 (bidireccional)
+    (ir l3 l2)                 ; Camino de L3 a L2 (unidireccional)
+    (ir l2 l4)                 ; Camino de L2 a L4 (unidireccional)
+    (ir l3 l4)                 ; Camino de L3 a L4 (bidireccional)
+    (ir l4 l3)                 ; Camino de L4 a L3 (bidireccional)
+    (ir l4 l5)                 ; Camino de L4 a L5 (bidireccional)
+    (ir l5 l4)                 ; Camino de L5 a L4 (bidireccional)
   )
   
-  (:goal
-    (and
-      (in rock1 lab1)
-      (in rock2 lab1)
+  (:goal 
+    (and 
+      (roca-en-l l5 r1)       ; Roca 1 está en el laboratorio
+      (roca-en-l l5 r2)       ; Roca 2 está en el laboratorio
     )
   )
 )
