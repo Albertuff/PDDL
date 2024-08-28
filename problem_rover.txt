@@ -1,0 +1,36 @@
+(define (problem rover-problem)
+  (:domain rover-domain)
+  
+  (:objects
+    rover1 - rover
+    rock1 - rock
+    rock2 - rock
+    loc1 loc2 loc3 loc4 loc5 - location
+    lab1 - lab
+  )
+  
+  (:init
+    (at rover1 loc4)
+    (at rock1 loc1)
+    (at rock2 loc2)
+    
+    (connected loc3 loc1)  ; El camino entre loc3 y loc1 es bidireccional
+    (connected loc1 loc3)
+    
+    (connected loc3 loc2)  ; El camino entre loc3 y loc2 es unidireccional
+    (connected loc2 loc4)  ; El camino entre loc2 y loc4 es unidireccional
+    
+    (connected loc3 loc4)  ; El camino entre loc3 y loc4 es bidireccional
+    (connected loc4 loc3)
+    
+    (connected loc4 loc5)  ; El camino entre loc4 y loc5 es bidireccional
+    (connected loc5 loc4)
+  )
+  
+  (:goal
+    (and
+      (in rock1 lab1)
+      (in rock2 lab1)
+    )
+  )
+)

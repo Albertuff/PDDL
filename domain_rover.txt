@@ -1,0 +1,29 @@
+(define (domain rover-domain)
+  (:requirements :strips :typing)
+  (:types location rover rock lab)
+  
+  (:predicates
+    (at ?r - rover ?l - location)
+    (at ?r - rock ?l - location)
+    (connected ?l1 - location ?l2 - location)
+    (in ?r - rock ?lab - lab)
+  )
+  
+  (:action move
+    :parameters (?rover - rover ?from - location ?to - location)
+    :precondition (and (at ?rover ?from) (connected ?from ?to))
+    :effect (and (not (at ?rover ?from)) (at ?rover ?to))
+  )
+  
+  (:action load
+    :parameters (?rover - rover ?rock - rock ?loc - location)
+    :precondition (and (at ?rover ?loc) (at ?rock ?loc))
+    :effect (and (not (at ?rock ?loc)) (in ?rock ?rover))
+  )
+  
+  (:action unload
+    :parameters (?rover - rover ?rock - rock ?lab - lab)
+    :precondition (and (at ?rover ?lab) (in ?rock ?rover))
+    :effect (and (not (in ?rock ?rover)) (in ?rock ?lab))
+  )
+)
