@@ -1,0 +1,45 @@
+(define (domain rover-domain)
+  (:requirements :typing)
+
+  ; Definición de tipos
+  (:types 
+    rock rover location lab
+  )
+
+  ; Definición de predicados
+  (:predicates
+    (roca-en-l ?l - location ?r - rock)         ; La roca ?r está en la localidad ?l
+    (rover-en-l ?l - location ?rover - rover)   ; El rover está en la localidad ?l
+    (lab-en ?l - location)                      ; El laboratorio está en la localidad ?l
+    (rover-vacio ?rover - rover)                ; El rover está vacío
+    (rover-lleno ?rover - rover ?r - rock)      ; El rover está transportando la roca ?r
+    (ir ?l1 - location ?l2 - location)          ; Hay un camino de ?l1 a ?l2
+  )
+  
+  ; Acción para mover el rover de una localidad a otra
+  (:action mover
+    :parameters (?rover - rover ?l1 - location ?l2 - location)
+    :precondition 
+      (and (rover-en-l ?l1 ?rover) (ir ?l1 ?l2))                    
+    :effect 
+      (and (not (rover-en-l ?l1 ?rover)) (rover-en-l ?l2 ?rover) (ir ?l2 ?l1))
+  )
+
+  ; Acción para cargar una roca en el rover
+  (:action cargar
+    :parameters (?r - rock ?l - location ?rover - rover)
+    :precondition 
+      (and (rover-en-l ?l ?rover) (roca-en-l ?l ?r) (rover-vacio ?rover)) ; El rover está en ?l, hay una roca en ?l y el rover está vacío
+    :effect 
+      (and (not (rover-vacio ?rover)) (rover-lleno ?rover ?r) (not (roca-en-l ?l ?r)))
+  )
+
+  ; Acción para descargar una roca en una localidad (laboratorio)
+  (:action descargar
+    :parameters (?r - rock ?l - location ?rover)
+    :precondition 
+      (and (rover-en-l ?l ?rover) (rover-lleno ?rover ?r)) ; El rover está en ?l y está lleno con la roca ?r
+    :effect 
+      (and (not (rover-lleno ?rover ?r)) (rover-vacio ?rover) (roca-en-l ?l ?r))
+  )
+)

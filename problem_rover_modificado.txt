@@ -1,0 +1,49 @@
+(define (problem transporte-rocas-extendido)
+  (:domain rover-domain)
+  
+  ; Definición de objetos
+  (:objects 
+    r1 r2 r3 r4 - rock              ; Cuatro rocas en total
+    l1 l2 l3 l4 l5 l6 l7 l8 l9 l10 l11 - location  ; Localidades y laboratorios
+    rover - rover                   ; El rover
+    lab1 lab2 - lab                 ; Dos laboratorios
+  )
+  
+  ; Estado inicial
+  (:init 
+    (roca-en-l l1 r1)              ; Roca 1 está en la localidad 1
+    (roca-en-l l2 r2)              ; Roca 2 está en la localidad 2
+    (roca-en-l l9 r3)              ; Roca 3 está en la localidad 9
+    (roca-en-l l10 r4)             ; Roca 4 está en la localidad 10
+    (rover-en-l l4 rover)          ; El rover está en la localidad 4
+    (lab-en l5)                    ; Laboratorio 1 está en la localidad 5
+    (lab-en l11)                   ; Laboratorio 2 está en la localidad 11
+    (rover-vacio rover)            ; El rover está vacío
+
+    ; Rutas permitidas entre localidades
+    (ir l4 l5) (ir l5 l4)          ; Camino bidireccional entre L4 y L5
+    (ir l4 l3) (ir l3 l4)          ; Camino bidireccional entre L4 y L3
+    (ir l3 l1) (ir l1 l3)          ; Camino bidireccional entre L3 y L1
+    (ir l3 l2)                     ; Camino unidireccional de L3 a L2
+    (ir l2 l4)                     ; Camino unidireccional de L2 a L4
+    (ir l2 l8) (ir l8 l2)          ; Camino bidireccional entre L2 y L8
+    (ir l8 l9) (ir l9 l8)          ; Camino bidireccional entre L8 y L9
+    (ir l9 l2)                     ; Camino unidireccional de L9 a L2
+    (ir l8 l6)                     ; Camino unidireccional de L8 a L6
+    (ir l6 l10)                    ; Camino unidireccional de L6 a L10
+    (ir l10 l8)                    ; Camino unidireccional de L10 a L8
+    (ir l6 l7) (ir l7 l6)          ; Camino bidireccional entre L6 y L7
+    (ir l7 l11) (ir l11 l7)        ; Camino bidireccional entre L7 y L11
+    (ir l7 l3)                     ; Camino unidireccional de L7 a L3
+  )
+  
+  ; Objetivo: Colocar las rocas en los laboratorios correctos
+  (:goal 
+    (and 
+      (roca-en-l l5 r1)       ; Roca 1 está en el laboratorio 1 (L5)
+      (roca-en-l l11 r2)      ; Roca 2 está en el laboratorio 2 (L11)
+      (roca-en-l l11 r3)      ; Roca 3 está en el laboratorio 2 (L11)
+      (roca-en-l l5 r4)       ; Roca 4 está en el laboratorio 1 (L5)
+    )
+  )
+)
